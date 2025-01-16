@@ -96,7 +96,6 @@ const Sidebar = () => {
           )}
         </button>
         {/* PROJECTS LIST */}
-        
 
         {/* PRIORITIES LINKS */}
         <button
