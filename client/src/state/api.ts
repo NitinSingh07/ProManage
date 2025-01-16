@@ -7,6 +7,7 @@ export interface Project {
   startDate?: string;
   endDate?: string;
 }
+
 export enum Priority {
   Urgent = "Urgent",
   High = "High",
@@ -38,6 +39,7 @@ export interface Attachment {
   taskId: number;
   uploadedById: number;
 }
+
 export interface Task {
   id: number;
   title: string;
