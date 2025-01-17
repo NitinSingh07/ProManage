@@ -79,12 +79,12 @@ export const api = createApi({
   }),
   reducerPath: "api",
 
-  tagTypes: ["Project", "Tasks"],
+  tagTypes: ["Projects", "Tasks"],
 
   endpoints: (build) => ({
     getProjects: build.query<Project[], void>({
       query: () => "projects",
-      providesTags: ["Project"],
+      providesTags: ["Projects"],
     }),
     createProject: build.mutation<Project, Partial<Project>>({
       query: (project) => ({
@@ -92,7 +92,7 @@ export const api = createApi({
         method: "POST",
         body: project,
       }),
-      invalidatesTags: ["Project"],
+      invalidatesTags: ["Projects"],
     }),
     getTasks: build.query<Task[], { projectId: number }>({
       query: ({ projectId }) => `tasks?projectId=${projectId}`,
@@ -121,6 +121,10 @@ export const api = createApi({
         { type: "Tasks", id: taskId },
       ],
     }),
+
+    search: build.query<SearchResults, string>({
+      query: (query) => `search?query=${query}`,
+    }),
   }),
 });
 
@@ -130,4 +134,5 @@ export const {
   useGetTasksQuery,
   useCreateTaskMutation,
   useUpdateTaskStatusMutation,
+  useSearchQuery,
 } = api;
