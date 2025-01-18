@@ -9,14 +9,16 @@ const Settings = () => {
     roleName: "Developer",
   };
 
-  const labelStyles = "block text-sm font-medium dark:text-white";
+  const labelStyles =
+    "block text-sm font-medium text-gray-700 dark:text-gray-300";
   const textStyles =
-    "mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 dark:text-white";
+    "mt-2 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-gray-50 text-gray-900 dark:bg-gray-800 dark:text-white dark:border-gray-600";
 
   return (
-    <div className="p-8">
+    <div className="min-h-screen bg-gray-100 p-8 dark:bg-gray-900">
       <Header name="Settings" />
-      <div className="space-y-4">
+      <div className="mx-auto mt-8 max-w-3xl space-y-6 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+     
         <div>
           <label className={labelStyles}>Username</label>
           <div className={textStyles}>{userSettings.username}</div>
