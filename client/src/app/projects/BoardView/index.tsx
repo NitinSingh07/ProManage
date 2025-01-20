@@ -99,16 +99,12 @@ const TaskColumn = ({
             </span>
           </h3>
           <div className="flex items-center gap-1">
-            <button
-              className="flex h-6 w-5 items-center justify-center dark:text-neutral-500"
-              title="More options"
-            >
+            <button className="flex h-6 w-5 items-center justify-center dark:text-neutral-500">
               <EllipsisVertical size={26} />
             </button>
             <button
               className="flex h-6 w-6 items-center justify-center rounded bg-gray-200 dark:bg-dark-tertiary dark:text-white"
               onClick={() => setIsModalNewTaskOpen(true)}
-              title="Add new task"
             >
               <Plus size={16} />
             </button>
@@ -148,6 +144,7 @@ const Task = ({ task }: TaskProps) => {
     : "";
 
   const numberOfComments = (task.comments && task.comments.length) || 0;
+
   const PriorityTag = ({ priority }: { priority: TaskType["priority"] }) => (
     <div
       className={`rounded-full px-2 py-1 text-xs font-semibold ${
@@ -184,7 +181,6 @@ const Task = ({ task }: TaskProps) => {
           className="h-auto w-full rounded-t-md"
         />
       )}
-
       <div className="p-4 md:p-6">
         <div className="flex items-start justify-between">
           <div className="flex flex-1 flex-wrap items-center gap-2">
@@ -201,13 +197,11 @@ const Task = ({ task }: TaskProps) => {
               ))}
             </div>
           </div>
-          <button
-            className="flex h-6 w-4 flex-shrink-0 items-center justify-center dark:text-neutral-500"
-            title="More options"
-          >
+          <button className="flex h-6 w-4 flex-shrink-0 items-center justify-center dark:text-neutral-500">
             <EllipsisVertical size={26} />
           </button>
         </div>
+
         <div className="my-3 flex justify-between">
           <h4 className="text-md font-bold dark:text-white">{task.title}</h4>
           {typeof task.points === "number" && (
@@ -216,6 +210,7 @@ const Task = ({ task }: TaskProps) => {
             </div>
           )}
         </div>
+
         <div className="text-xs text-gray-500 dark:text-neutral-500">
           {formattedStartDate && <span>{formattedStartDate} - </span>}
           {formattedDueDate && <span>{formattedDueDate}</span>}
