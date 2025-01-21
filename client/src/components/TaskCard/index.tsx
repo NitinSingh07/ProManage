@@ -18,7 +18,7 @@ const TaskCard = ({ task }: Props) => {
           </h4>
           <div className="flex flex-wrap gap-3">
             <Image
-              src={`/${task.attachments[0].fileURL}`}
+              src={`https://promanage-s3-images.s3.eu-north-1.amazonaws.com/${task.attachments[0].fileURL}`}
               alt={task.attachments[0].fileName}
               width={400}
               height={200}
