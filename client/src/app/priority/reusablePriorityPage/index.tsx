@@ -5,7 +5,12 @@ import Header from "@/components/Header";
 import ModalNewTask from "@/components/ModalNewTask";
 import TaskCard from "@/components/TaskCard";
 import { dataGridClassNames, dataGridSxStyles } from "@/lib/utils";
-import { Priority, Task, useGetTasksByUserQuery } from "@/state/api";
+import {
+  Priority,
+  Task,
+  useGetAuthUserQuery,
+  useGetTasksByUserQuery,
+} from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
@@ -71,7 +76,9 @@ const columns: GridColDef[] = [
 const ReusablePriorityPage = ({ priority }: Props) => {
   const [view, setView] = useState("list");
   const [isModalNewTaskOpen, setIsModalNewTaskOpen] = useState(false);
-  const userId = 1;
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+  const userId = currentUser?.userDetails?.userId ?? null;
   const {
     data: tasks,
     isLoading,
@@ -86,7 +93,6 @@ const ReusablePriorityPage = ({ priority }: Props) => {
     (task: Task) => task.priority === priority,
   );
 
-  if (isLoading) return <div>Loading...</div>;
   if (isTasksError || !tasks) return <div>Error fetching tasks</div>;
 
   return (
@@ -106,7 +112,6 @@ const ReusablePriorityPage = ({ priority }: Props) => {
           </button>
         }
       />
-
       <div className="mb-4 flex justify-start">
         <button
           className={`px-4 py-2 ${
@@ -125,7 +130,6 @@ const ReusablePriorityPage = ({ priority }: Props) => {
           Table
         </button>
       </div>
-
       {isLoading ? (
         <div>Loading tasks...</div>
       ) : view === "list" ? (

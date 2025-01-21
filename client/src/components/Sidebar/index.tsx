@@ -1,5 +1,9 @@
 "use client";
-import React, { useState } from "react";
+
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import { setIsSidebarCollapsed } from "@/state";
+import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 import {
   AlertCircle,
   AlertOctagon,
@@ -18,31 +22,41 @@ import {
   Users,
   X,
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/app/redux";
-import { setIsSidebarCollapsed } from "@/state";
-import { useGetProjectsQuery } from "@/state/api";
+import React, { useState } from "react";
 
 const Sidebar = () => {
   const [showProjects, setShowProjects] = useState(true);
   const [showPriority, setShowPriority] = useState(true);
-  const { data: projects } = useGetProjectsQuery();
 
+  const { data: projects } = useGetProjectsQuery();
   const dispatch = useAppDispatch();
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
   );
 
+  const { data: currentUser } = useGetAuthUserQuery({});
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
+  if (!currentUser) return null;
+  const currentUserDetails = currentUser?.userDetails;
+
   const sidebarClassNames = `fixed flex flex-col h-[100%] justify-between shadow-xl
     transition-all duration-300 h-full z-40 dark:bg-black overflow-y-auto bg-white
     ${isSidebarCollapsed ? "w-0 hidden" : "w-64"}
   `;
+
   return (
     <div className={sidebarClassNames}>
       <div className="flex h-[100%] w-full flex-col justify-start">
-        {/* top logo */}
+        {/* TOP LOGO */}
         <div className="z-50 flex min-h-[56px] w-64 items-center justify-between bg-white px-6 pt-3 dark:bg-black">
           <div className="text-xl font-bold text-gray-800 dark:text-white">
             ProManage
@@ -50,7 +64,6 @@ const Sidebar = () => {
           {isSidebarCollapsed ? null : (
             <button
               className="py-3"
-              title="Collapse Sidebar"
               onClick={() => {
                 dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
               }}
@@ -59,9 +72,7 @@ const Sidebar = () => {
             </button>
           )}
         </div>
-
-        {/* team */}
-
+        {/* TEAM */}
         <div className="flex items-center gap-5 border-y-[1.5px] border-gray-200 px-8 py-4 dark:border-gray-700">
           <Image
             src="https://promanage-s3-images.s3.eu-north-1.amazonaws.com/logo.png"
@@ -79,8 +90,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-
-        {/* sidebar links */}
+        {/* NAVBAR LINKS */}
         <nav className="z-10 w-full">
           <SidebarLink icon={Home} label="Home" href="/" />
           <SidebarLink icon={Briefcase} label="Timeline" href="/timeline" />
@@ -151,6 +161,32 @@ const Sidebar = () => {
           </>
         )}
       </div>
+      <div className="z-10 mt-32 flex w-full flex-col items-center gap-4 bg-white px-8 py-4 dark:bg-black md:hidden">
+        <div className="flex w-full items-center">
+          <div className="align-center flex h-9 w-9 justify-center">
+            {!!currentUserDetails?.profilePictureUrl ? (
+              <Image
+                src={`https://promanage-s3-images.s3.eu-north-1.amazonaws.com/${currentUserDetails?.profilePictureUrl}`}
+                alt={currentUserDetails?.username || "User Profile Picture"}
+                width={100}
+                height={50}
+                className="h-full rounded-full object-cover"
+              />
+            ) : (
+              <User className="h-6 w-6 cursor-pointer self-center rounded-full dark:text-white" />
+            )}
+          </div>
+          <span className="mx-3 text-gray-800 dark:text-white">
+            {currentUserDetails?.username}
+          </span>
+          <button
+            className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+            onClick={handleSignOut}
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -176,6 +212,7 @@ const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
         {isActive && (
           <div className="absolute left-0 top-0 h-[100%] w-[5px] bg-blue-200" />
         )}
+
         <Icon className="h-6 w-6 text-gray-800 dark:text-gray-100" />
         <span className={`font-medium text-gray-800 dark:text-gray-100`}>
           {label}
